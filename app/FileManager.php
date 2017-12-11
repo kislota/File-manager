@@ -18,7 +18,7 @@ class FileManager extends Model {
             'root' => $path['root'], //Для ссылок в списке папок
             'back' => $path['back'], //Ссылка для кнопки назад
             'top' => $path['top'], //Путь для отображения
-            'dirname' => $arr['dir'], //Массив папок
+            'dirname' => $arr['dirall'], //Массив папок
             'file' => $arr['files'], //Массив файлов
         ];
     }
@@ -90,10 +90,7 @@ class FileManager extends Model {
         } else {
             $dirall = FileManager::dirNameAllow($dir);
         }
-        return [
-            'files' => $files,
-            'dir' => $dirall,
-        ];
+        return compact(['files', 'dirall']);
     }
 
     /*
