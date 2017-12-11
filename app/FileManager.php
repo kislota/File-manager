@@ -81,7 +81,7 @@ class FileManager extends Model {
         } else {
             foreach ($f as $key => $file) {
                 $files[$key]['size'] = FileManager::getFileSize($file);
-                $files[$key]['name'] = $file;
+                $files[$key]['name'] = FileManager::getName($file);
             }
         }
         $dir = $d->directories($path);
@@ -91,6 +91,16 @@ class FileManager extends Model {
             $dirall = FileManager::dirNameAllow($dir);
         }
         return compact(['files', 'dirall']);
+    }
+
+    /*
+     * Имя файла
+     */
+
+    public static function getName($file) {
+        $filetmp = explode('/', $file);
+        $filename = array_pop($filetmp);
+        return $filename;
     }
 
     /*
@@ -115,19 +125,22 @@ class FileManager extends Model {
             'path_url' => $path_url,
         ];
     }
-/*
- * Делаем ссылку назад
- */
+
+    /*
+     * Делаем ссылку назад
+     */
+
     public static function backUrl($path) {
-        $pref = null;//Определяем ссылку для префикса
-        $path = explode('&', $path);//Смотрим на сколько ушли
+        $pref = null; //Определяем ссылку для префикса
+        $back = null;
+        $path = explode('&', $path); //Смотрим на сколько ушли
         if (count($path) != 1) {//Если ушли далеко
             for ($i = 0; (count($path) - 1) > $i; $i++) {//Формируем обратный путь
-                $back .= $pref . $path[$i];//Добавляем значение ссылки и префикс разделителя
-                $pref = '&';//Определяем разделитель
+                $back .= $pref . $path[$i]; //Добавляем значение ссылки и префикс разделителя
+                $pref = '&'; //Определяем разделитель
             }
         } else {
-            $back = '/';//Если ушли не далеко остаёмся в корне
+            $back = '/'; //Если ушли не далеко остаёмся в корне
         }
 
 
