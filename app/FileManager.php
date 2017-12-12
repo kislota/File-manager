@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
 class FileManager extends Model {
+    
     /*
      * Обрабатываем запрос с путём к нужной директории и выводим нужную инфу
      */
@@ -74,21 +75,24 @@ class FileManager extends Model {
      */
 
     public static function getDisk($path) {
-        $d = Storage::disk('web');
-        $f = $d->files($path);
-        if (!$f) {
-            $files = null;
-        } else {
+        $d = Storage::disk('web'); //Соединяемся с диском
+        $f = $d->files($path); //Смотрим файлы в папке
+        if ($f) {//Если файлы есть
             foreach ($f as $key => $file) {
+                //Получаем размер файла
                 $files[$key]['size'] = FileManager::getFileSize($file);
+                //Получаем имя файла
                 $files[$key]['name'] = FileManager::getName($file);
             }
-        }
-        $dir = $d->directories($path);
-        if (!$dir) {
-            $dirall = null;
         } else {
+            $files = null; //Если нет файлов
+        }
+        $dir = $d->directories($path); //Смотрим папки в папке
+        if ($dir) {//Если есть папки
+            //Получаем имя папки и разрешение на неё
             $dirall = FileManager::dirNameAllow($dir);
+        } else {
+            $dirall = null; //Если нет папок
         }
         return compact(['files', 'dirall']);
     }
